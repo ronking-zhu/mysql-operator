@@ -59,6 +59,57 @@ kubectl apply -k config/samples/
 
 >**NOTE**: Ensure that the samples has default values to test it out.
 
+***run demo***
+```bash
+``` controller
+[root@localhost mysql-crd]# make install
+/root/mysql-crd/bin/controller-gen-v0.14.0 rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+/root/mysql-crd/bin/kustomize-v5.3.0 build config/crd | kubectl apply -f -
+customresourcedefinition.apiextensions.k8s.io/mysqlclusters.db.my.domain created
+[root@localhost mysql-crd]# kubectl get crd
+NAME                         CREATED AT
+mysqlclusters.db.my.domain   2025-12-10T15:10:56Z
+[root@localhost mysql-crd]# make run
+/root/mysql-crd/bin/controller-gen-v0.14.0 rbac:roleName=manager-role crd webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+/root/mysql-crd/bin/controller-gen-v0.14.0 object:headerFile="hack/boilerplate.go.txt" paths="./..."
+go fmt ./...
+internal/controller/mysqlcluster_controller.go
+go vet ./...
+go run ./cmd/main.go
+2025-12-10T10:11:11-05:00       INFO    setup   starting manager
+2025-12-10T10:11:11-05:00       INFO    starting server {"kind": "health probe", "addr": "[::]:8081"}
+2025-12-10T10:11:11-05:00       INFO    Starting EventSource    {"controller": "mysqlcluster", "controllerGroup": "db.my.domain", "controllerKind": "MySQLCluster", "source": "kind source: *v1.MySQLCluster"}
+2025-12-10T10:11:11-05:00       INFO    Starting Controller     {"controller": "mysqlcluster", "controllerGroup": "db.my.domain", "controllerKind": "MySQLCluster"}
+2025-12-10T10:11:11-05:00       INFO    Starting workers        {"controller": "mysqlcluster", "controllerGroup": "db.my.domain", "controllerKind": "MySQLCluster", "worker count": 1}
+2025-12-10T10:11:33-05:00       INFO    Creating a new StatefulSet      {"controller": "mysqlcluster", "controllerGroup": "db.my.domain", "controllerKind": "MySQLCluster", "MySQLCluster": {"name":"mysqlcluster-sample","namespace":"default"}, "namespace": "default", "name": "mysqlcluster-sample", "reconcileID": "59b9a59a-aaf9-4bbd-9681-d176d946a679", "Namespace": "default", "Name": "mysqlcluster-sample"}
+
+```
+```bash
+--- teminal
+
+[root@localhost mysql-crd]# cat config/samples/db_v1_mysqlcluster.yaml
+apiVersion: db.my.domain/v1
+kind: MySQLCluster
+metadata:
+  labels:
+    app.kubernetes.io/name: mysql-crd
+    app.kubernetes.io/managed-by: kustomize
+  name: mysqlcluster-sample
+spec:
+  # TODO(user): Add fields here
+        replicas: 1
+[root@localhost mysql-crd]# kubectl apply -f config/samples/db_v1_mysqlcluster.yaml
+mysqlcluster.db.my.domain/mysqlcluster-sample created
+[root@localhost mysql-crd]# kubectl get pods
+NAME                    READY   STATUS              RESTARTS   AGE
+mysqlcluster-sample-0   0/1     ContainerCreating   0          7s
+[root@localhost mysql-crd]# kubectl get pods
+NAME                    READY   STATUS    RESTARTS   AGE
+mysqlcluster-sample-0   1/1     Running   0          44s
+[root@localhost mysql-crd]# kubectl get pods
+NAME                    READY   STATUS    RESTARTS   AGE
+mysqlcluster-sample-0   1/1     Running   0          45s
+```
 ### To Uninstall
 **Delete the instances (CRs) from the cluster:**
 
