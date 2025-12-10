@@ -11,7 +11,19 @@
 - docker version 17.03+.
 - kubectl version v1.11.3+.
 - Access to a Kubernetes v1.11.3+ cluster.
-
+```bash
+[root@localhost mysql-crd]# go version
+go version go1.24.4 (Red Hat 1.24.4-1.module+el8.10.0+23323+67916f33) linux/amd64
+[root@localhost mysql-crd]# minikube version
+minikube version: v1.37.0
+commit: 65318f4cfff9c12cc87ec9eb8f4cdd57b25047f3
+[root@localhost mysql-crd]# kubectl version
+Client Version: v1.34.3
+Kustomize Version: v5.7.1
+Server Version: v1.28.0
+Warning: version difference between client (1.34) and server (1.28) exceeds the supported minor version skew of +/-1
+[root@localhost mysql-crd]#
+```
 ### To Deploy on the cluster
 **Build and push your image to the location specified by `IMG`:**
 
