@@ -1,0 +1,23 @@
+apiVersion: database.my.domain/v1
+kind: MySQLCluster
+metadata:
+  labels:
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: mysqlcluster-sample # CR 实例的名字
+spec:
+  # ----------------------------------------------------
+  # 填充字段 (对应 Go 结构体中的 json tag)
+  # ----------------------------------------------------
+  
+  # 1. 数据库镜像版本 (必填)
+  image: "mysql:8.0" 
+  
+  # 2. 存储大小 (必填，用于创建 PVC)
+  storageSize: "2Gi" 
+  
+  # 3. 关联的 Secret 名称 (用于密码)
+  secretName: "mysql-root-secret"
+  
+  # 4. 端口 (可选，Operator 代码中我们默认是 3306)
+  port: 3306
